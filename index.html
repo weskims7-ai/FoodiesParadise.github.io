@@ -1,151 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foodie's Paradise | Culinary AI Synthesis</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+/* Specialized Laboratory Aesthetic */
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --neon-purple: #a855f7;
+    --neon-blue: #3b82f6;
+}
 
-    <style>
-        :root {
-            --accent: #10b981; /* Emerald/Paradise Green */
-            --bg-dark: #020617;
-        }
+.bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(circle at 50% 50%, #020617 0%, #000 100%);
+}
 
-        body { 
-            font-family: 'Outfit', sans-serif; 
-            background: var(--bg-dark);
-            color: #ffffff;
-            overflow-x: hidden;
-            margin: 0;
-        }
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-        /* Responsive Background */
-        .bg-canvas {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background: 
-                radial-gradient(circle at 10% 10%, rgba(16, 185, 129, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(59, 130, 246, 0.1) 0%, transparent 40%),
-                #020617;
-        }
+.glass-card:hover {
+    box-shadow: 0 0 30px rgba(168, 85, 247, 0.2);
+}
 
-        /* Glassmorphism Logic */
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
-        }
+@keyframes pulse-border {
+    0% { border-color: rgba(168, 85, 247, 0.2); }
+    50% { border-color: rgba(168, 85, 247, 0.8); }
+    100% { border-color: rgba(168, 85, 247, 0.2); }
+}
 
-        /* Floating Animation */
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .floating {
-            animation: float 6s ease-in-out infinite;
-        }
-
-        /* Device Scaling */
-        html { font-size: 16px; }
-        @media (min-width: 1920px) { html { font-size: 22px; } } /* TV */
-        @media (max-width: 640px) { html { font-size: 14px; } }  /* Phone */
-
-        .btn-paradise {
-            background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
-            transition: all 0.3s ease;
-        }
-        .btn-paradise:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
-        }
-    </style>
-</head>
-<body class="min-h-screen flex flex-col">
-
-    <div class="bg-canvas"></div>
-
-    <nav class="w-full max-w-7xl mx-auto p-8 flex justify-between items-center relative z-10">
-        <div class="flex items-center gap-3">
-            <div class="p-2 bg-emerald-500 rounded-lg shadow-lg shadow-emerald-500/20">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke-width="2" stroke-linecap="round"/></svg>
-            </div>
-            <span class="text-2xl font-black tracking-tighter uppercase">Foodie's <span class="text-emerald-400">Paradise</span></span>
-        </div>
-        <div class="hidden md:block font-mono text-[0.6rem] tracking-[0.4em] text-slate-500 uppercase">Neural-Kitchen OS v1.0</div>
-    </nav>
-
-    <main class="flex-1 w-full max-w-4xl mx-auto px-6 flex flex-col justify-center relative z-10">
-        
-        <header class="text-center mb-12">
-            <h1 class="text-6xl md:text-8xl font-black mb-6 tracking-tight leading-tight">
-                Create Your <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-400">Paradise.</span>
-            </h1>
-            <p class="text-slate-400 text-lg md:text-xl font-light">Enter your random ingredients and let AI synthesize the perfect meal.</p>
-        </header>
-
-        <div class="glass p-8 rounded-[2.5rem] floating mb-12">
-            <div class="flex flex-col md:flex-row gap-4">
-                <input id="ingredientInput" type="text" 
-                    placeholder="e.g. Rice, Tomato, Onion..." 
-                    class="flex-1 bg-black/40 border border-white/10 rounded-2xl px-6 py-5 text-lg text-white focus:outline-none focus:border-emerald-500 transition-all">
-                <button onclick="synthesize()" class="btn-paradise px-10 py-5 rounded-2xl font-bold text-lg uppercase tracking-widest">
-                    Synthesize
-                </button>
-            </div>
-        </div>
-
-        <div id="recipeResult" class="hidden pb-20">
-            <div class="glass p-10 rounded-[3rem] border-t-2 border-emerald-500/30">
-                <div class="flex justify-between items-center mb-8">
-                    <h2 id="recipeTitle" class="text-3xl md:text-4xl font-bold"></h2>
-                    <span id="recipeTime" class="text-xs font-mono bg-emerald-500/10 text-emerald-400 px-4 py-2 rounded-full border border-emerald-500/20"></span>
-                </div>
-                <div class="bg-black/20 p-8 rounded-3xl border border-white/5">
-                    <h3 class="text-xs uppercase tracking-widest text-slate-500 mb-4 font-bold">Preparation Procedure</h3>
-                    <p id="recipeText" class="text-slate-300 text-lg leading-relaxed font-light"></p>
-                </div>
-            </div>
-        </div>
-
-        <div id="loading" class="hidden text-center py-20">
-            <div class="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-            <p class="mt-4 font-mono text-xs tracking-widest text-emerald-400">ANALYZING FLAVOR PROFILES...</p>
-        </div>
-
-    </main>
-
-    <script>
-        function synthesize() {
-            const input = document.getElementById('ingredientInput').value.trim();
-            const resultDiv = document.getElementById('recipeResult');
-            const loading = document.getElementById('loading');
-
-            if (!input) return;
-
-            resultDiv.classList.add('hidden');
-            loading.classList.remove('hidden');
-
-            setTimeout(() => {
-                loading.classList.add('hidden');
-                resultDiv.classList.remove('hidden');
-                
-                const reagents = input.split(',').map(r => r.trim());
-                document.getElementById('recipeTitle').innerText = reagents[0].charAt(0).toUpperCase() + reagents[0].slice(1) + " Paradise Bowl";
-                document.getElementById('recipeTime').innerText = "15-20 MINS";
-                document.getElementById('recipeText').innerText = 
-                    `Welcome to Foodie's Paradise. Your reagents (${input}) have been synthesized. ` +
-                    `We recommend a 'Fusion Stir-fry'. Sauté your ${reagents[0]} in a light oil, ` +
-                    `then incorporate ${reagents[1] || 'remaining items'}. ` +
-                    `This combination creates a balanced nutritional profile with high palatability. Enjoy your paradise!`;
-            }, 2000);
-        }
-    </script>
-</body>
-</html>
+.synthesizing {
+    animation: pulse-border 2s infinite;
+}
