@@ -3,97 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoodiesParadise | Instant Local AI</title>
+    <title>Eco-Decay Lab | Cyber-Pollution Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #00ffcc; --bg: #050505; }
-        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: white; margin: 0; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
-        .neon-btn { 
-            background: transparent; 
-            border: 1px solid var(--accent); 
-            color: var(--accent);
-            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
-            transition: 0.3s;
+        :root { --neon-green: #00ff9d; --toxic-yellow: #f4ff00; }
+        body { font-family: 'Outfit', sans-serif; background: #0a0a0c; color: white; overflow-x: hidden; }
+        
+        .scanner-line {
+            height: 2px; background: var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green);
+            position: absolute; width: 100%; top: 0;
+            animation: scan 3s linear infinite; z-index: 10;
         }
-        .neon-btn:hover:not(:disabled) { background: var(--accent); color: black; box-shadow: 0 0 30px rgba(0, 255, 204, 0.5); }
+        @keyframes scan { 0% { top: 0%; } 100% { top: 100%; } }
+
+        .health-bar-inner { transition: width 0.5s ease, background-color 0.5s ease; }
+        .decay-target { transition: filter 0.5s ease, opacity 0.5s ease; }
+        
+        .glass-panel { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="p-4 md:p-10">
 
-    <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
-        <span class="text-2xl font-black tracking-tighter uppercase">Foodies<span class="text-[#00ffcc]">Paradise</span></span>
-        <div id="status" class="text-[10px] font-mono text-yellow-500 italic">● WARMING UP ENGINE...</div>
-    </nav>
-
-    <main class="max-w-4xl mx-auto px-6 py-10 w-full">
-        <header class="text-center mb-12">
-            <h1 class="text-6xl font-extrabold mb-4 tracking-tight">Zero<span class="text-[#00ffcc]">Key</span> Chef</h1>
-            <p class="text-slate-400">Fast, local AI running directly in your browser.</p>
+    <div class="max-w-5xl mx-auto">
+        <header class="flex justify-between items-end mb-12 border-b border-white/10 pb-6">
+            <div>
+                <h1 class="text-4xl font-black uppercase tracking-tighter italic">Eco<span class="text-[#00ff9d]">Decay</span> Lab</h1>
+                <p class="text-xs font-mono text-slate-500 uppercase tracking-widest">Temporal Waste Simulation // v1.0</p>
+            </div>
+            <div class="text-right">
+                <p class="text-[10px] font-mono text-slate-500 uppercase">Earth Health Status</p>
+                <div class="w-48 h-3 bg-white/10 rounded-full mt-1 overflow-hidden border border-white/5">
+                    <div id="healthBar" class="health-bar-inner h-full w-full bg-[#00ff9d]"></div>
+                </div>
+            </div>
         </header>
 
-        <div class="glass p-3 rounded-2xl mb-10 flex flex-col md:flex-row gap-3">
-            <input id="userInput" type="text" placeholder="Dish name (e.g. Omelette)..." 
-                class="flex-1 bg-transparent px-6 py-4 outline-none text-lg">
-            <button onclick="synthesize()" id="btn" disabled class="neon-btn px-10 py-4 rounded-xl font-bold uppercase tracking-widest text-sm disabled:opacity-30 disabled:cursor-wait">Loading...</button>
-        </div>
+        <div class="grid lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-1 space-y-6">
+                <div class="glass-panel p-6 rounded-3xl">
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4 text-center">Select Specimen</h2>
+                    <div class="grid grid-cols-2 gap-3" id="objectSelector">
+                        </div>
+                </div>
 
-        <div id="loading" class="hidden text-center py-10">
-            <div class="w-12 h-12 border-4 border-slate-800 border-t-[#00ffcc] rounded-full animate-spin mx-auto mb-4"></div>
-            <p class="text-[#00ffcc] font-mono text-xs tracking-widest uppercase">AI is thinking...</p>
-        </div>
+                <div class="glass-panel p-6 rounded-3xl">
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4 text-center">Temporal Slider</h2>
+                    <input type="range" id="timeSlider" min="0" max="500" value="0" class="w-full accent-[#00ff9d] cursor-pointer" oninput="updateSimulation()">
+                    <div class="flex justify-between mt-2 font-mono text-[10px] text-slate-500">
+                        <span>YEAR 0</span>
+                        <span>YEAR 500</span>
+                    </div>
+                </div>
+            </div>
 
-        <div id="recipeResult" class="hidden glass p-8 rounded-[2rem] border-t-2 border-[#00ffcc]">
-            <h2 id="title" class="text-3xl font-black mb-4 text-[#00ffcc]"></h2>
-            <div id="output" class="text-slate-200 leading-relaxed whitespace-pre-wrap italic"></div>
-        </div>
-    </main>
-
-    <script type="module">
-        import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.5.1/dist/transformers.min.js';
-
-        let pipe;
-
-        async function init() {
-            try {
-                // We use SmolLM-135M. It's tiny (only ~40MB) so it loads VERY fast.
-                pipe = await pipeline('text-generation', 'HuggingFaceTB/SmolLM2-135M-Instruct', {
-                    device: 'webgpu' // This makes it 10x faster if your browser supports it
-                });
+            <div class="lg:col-span-2 glass-panel rounded-[2.5rem] relative overflow-hidden flex flex-col items-center justify-center p-12 min-h-[400px]">
+                <div class="scanner-line"></div>
                 
-                document.getElementById('status').innerText = '● ENGINE READY';
-                document.getElementById('status').classList.replace('text-yellow-500', 'text-emerald-500');
-                document.getElementById('btn').disabled = false;
-                document.getElementById('btn').innerText = 'Synthesize';
-            } catch (e) {
-                document.getElementById('status').innerText = '● ERROR (TRY CHROME)';
-                console.error(e);
+                <div id="displayContainer" class="text-center">
+                    <div id="specimenEmoji" class="text-9xl decay-target mb-6 drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">🍎</div>
+                    <h3 id="specimenName" class="text-3xl font-black uppercase italic mb-2">Apple Core</h3>
+                    <p id="decayStatus" class="text-slate-400 font-mono text-sm tracking-tighter">STRUCTURALLY SOUND</p>
+                </div>
+
+                <div class="absolute bottom-8 left-8 right-8 flex justify-between font-mono text-[10px]">
+                    <div class="text-slate-500">YEARS ELAPSED: <span id="yearVal" class="text-white">0</span></div>
+                    <div class="text-slate-500">EST. RESIDUE: <span id="residueVal" class="text-white">100%</span></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const materials = {
+            apple: { name: "Apple Core", emoji: "🍎", years: 2, impact: 1 },
+            paper: { name: "Paper Bag", emoji: "🛍️", years: 0.1, impact: 2 },
+            can: { name: "Aluminum Can", emoji: "🥫", years: 100, impact: 60 },
+            plastic: { name: "Plastic Bottle", emoji: "🧴", years: 450, impact: 90 },
+            glass: { name: "Glass Jar", emoji: "🫙", years: 1000, impact: 5 } // Glass is neutral but takes forever
+        };
+
+        let currentMaterial = 'apple';
+
+        // Initialize UI
+        const selector = document.getElementById('objectSelector');
+        for (let key in materials) {
+            const btn = document.createElement('button');
+            btn.className = "p-4 glass-panel rounded-xl hover:border-[#00ff9d] transition-all text-2xl";
+            btn.innerHTML = materials[key].emoji;
+            btn.onclick = () => { currentMaterial = key; updateSimulation(); };
+            selector.appendChild(btn);
+        }
+
+        function updateSimulation() {
+            const year = parseInt(document.getElementById('timeSlider').value);
+            const mat = materials[currentMaterial];
+            
+            // Calculate Decay
+            let completion = Math.min((year / mat.years) * 100, 100);
+            let remaining = 100 - completion;
+
+            // Visual Updates
+            const emoji = document.getElementById('specimenEmoji');
+            document.getElementById('specimenName').innerText = mat.name;
+            emoji.innerHTML = mat.emoji;
+            document.getElementById('yearVal').innerText = year;
+            document.getElementById('residueVal').innerText = remaining.toFixed(0) + "%";
+
+            // CSS Effects (Graying and Fading)
+            emoji.style.filter = `grayscale(${completion}%)`;
+            emoji.style.opacity = (remaining / 100) + 0.1;
+
+            // Earth Health Bar Logic
+            // If the item hasn't decayed, it impacts health based on its 'impact' score
+            let health = 100 - (mat.impact * (remaining / 100));
+            const hb = document.getElementById('healthBar');
+            hb.style.width = health + "%";
+            
+            if (health > 70) hb.style.backgroundColor = "#00ff9d";
+            else if (health > 30) hb.style.backgroundColor = "#f4ff00";
+            else hb.style.backgroundColor = "#ff3e3e";
+
+            // Status Text
+            const status = document.getElementById('decayStatus');
+            if (remaining <= 0) {
+                status.innerText = "FULLY DECOMPOSED // MOLECULAR INTEGRATION COMPLETE";
+                status.style.color = "#00ff9d";
+            } else {
+                status.innerText = "STRUCTURAL DECAY IN PROGRESS...";
+                status.style.color = "#94a3b8";
             }
         }
 
-        window.synthesize = async function() {
-            const input = document.getElementById('userInput').value.trim();
-            if (!input) return;
-
-            document.getElementById('loading').classList.remove('hidden');
-            document.getElementById('recipeResult').classList.add('hidden');
-
-            const messages = [
-                { role: "system", content: "You are a chef. Give a short 3-step recipe." },
-                { role: "user", content: `Recipe for ${input}` }
-            ];
-
-            const out = await pipe(messages, { max_new_tokens: 150 });
-            
-            document.getElementById('title').innerText = input;
-            document.getElementById('output').innerText = out[0].generated_text.split('assistant\n')[1] || out[0].generated_text;
-            
-            document.getElementById('loading').classList.add('hidden');
-            document.getElementById('recipeResult').classList.remove('hidden');
-        };
-
-        init();
+        updateSimulation();
     </script>
 </body>
 </html>
